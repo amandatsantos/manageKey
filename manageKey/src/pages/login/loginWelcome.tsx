@@ -19,6 +19,7 @@ export default function LoginWelcome() {
 
             
             <Button title="Login"> </Button>
+            
         </View>
     )
 }
