@@ -7,6 +7,7 @@ type AuthContextType = {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   register: (email: string, password: string) => Promise<boolean>;
+  resetPassword: (email: string, newPassword: string) => Promise<boolean>; // Função de reset
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const storedUser = await AsyncStorage.getItem('user');
       if (storedUser) {
         setUser(storedUser);
-        setIsAuthenticated(true);
+        setIsAuthenticated(true);  // Se o usuário estiver armazenado, ele está autenticado
       }
     };
     loadUser();
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     await AsyncStorage.removeItem('user');
     setUser(null);
-    setIsAuthenticated(false);
+    setIsAuthenticated(false);  // Define como não autenticado ao fazer logout
   };
 
   const register = async (email: string, password: string) => {
@@ -57,6 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
+
   const login = async (email: string, password: string) => {
     try {
       // Recuperar dados armazenados
@@ -65,20 +67,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
       // Validar e-mail e senha
       if (users[email] && users[email] === password) {
+        // Salvar usuário autenticado
         await AsyncStorage.setItem('user', email);
         setUser(email);
-        setIsAuthenticated(true);
+        setIsAuthenticated(true);  // Define como autenticado após login bem-sucedido
         return true;
       }
-      return false;
+      return false;  // Caso e-mail ou senha estejam errados
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       return false;
     }
   };
 
+  // Função para resetar a senha
+  const resetPassword = async (email: string, newPassword: string) => {
+    try {
+      // Recuperar dados dos usuários
+      const storedUsers = await AsyncStorage.getItem('users');
+      const users = storedUsers ? JSON.parse(storedUsers) : {};
+  
+      if (users[email]) {
+        // Atualizar a senha do usuário
+        users[email] = newPassword;
+  
+        // Salvar no AsyncStorage
+        await AsyncStorage.setItem('users', JSON.stringify(users));
+        return true;
+      }
+      return false; // Se o usuário não existir
+    } catch (error) {
+      console.error('Erro ao resetar a senha:', error);
+      return false;
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

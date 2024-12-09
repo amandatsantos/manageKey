@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { useAuth} from '../contexts/AuthContext';
 import { Formik } from 'formik';
-import { validateEmail, validatePassword, validateConfirmPassword } from '../utils/validations';
-import * as Yup from 'yup';
+import ScreenWrapper from '../components/scrennWrapper';
+import Button from '../components/Button';
+import Input from '../components/Input';
+import globalStyles from '../styles'; // Estilos globais
+import { registerSchema } from '../utils/validations'; // Importação do esquema de validação
 
 const Register = ({ navigation }: any) => {
   const { register } = useAuth();
 
-  const handleRegister = async (values: { email: string; password: string; confirmPassword: string }) => {
-    const success = await register(values.email, values.password);
+  // Função para lidar com o registro
+  const handleRegister = async (values: { email: string; password: string; confirmPassword: string; fullname: string }) => {
+    const success = await register(values.email, values.password, values.fullname);
     if (success) {
       alert('Registro bem-sucedido!');
       navigation.navigate('Login');
@@ -17,61 +21,60 @@ const Register = ({ navigation }: any) => {
       alert('Erro ao registrar. Tente novamente.');
     }
   };
+
   return (
-    <Formik
-      initialValues={{ email: '', password: '', confirmPassword: '' }}
-      validationSchema={Yup.object({
-        email: validateEmail,
-        password: validatePassword,
-        confirmPassword: validateConfirmPassword,
-      })}
-      onSubmit={handleRegister}
-    >
-      {({ handleChange, handleSubmit, values, errors, touched }) => (
-        <View style={styles.container}>
-          <Text>Email</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange('email')}
-            value={values.email}
-            placeholder="Digite seu e-mail"
-          />
-          {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+    <ScreenWrapper>
+      <Formik
+        initialValues={{ email: '', password: '', confirmPassword: '', fullname: '' }}
+        validationSchema={registerSchema} // Esquema de validação importado
+        onSubmit={handleRegister}
+      >
+        {({ handleChange, handleSubmit, values, errors, touched }) => (
+          <View style={globalStyles.container}>
+            <Text style={globalStyles.label}>Nome Completo</Text>
+            <Input
+              onChangeText={handleChange('fullname')}
+              value={values.fullname}
+              placeholder="Digite seu nome completo"
+              error={touched.fullname && errors.fullname}
+            />
 
-          <Text>Senha</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange('password')}
-            value={values.password}
-            placeholder="Digite sua senha"
-            secureTextEntry
-          />
-          {touched.password && errors.password && <Text style={styles.error}>{errors.password}</Text>}
+            <Text style={globalStyles.label}>E-mail</Text>
+            <Input
+              onChangeText={handleChange('email')}
+              value={values.email}
+              placeholder="Digite seu e-mail"
+              error={touched.email && errors.email}
+            />
 
-          <Text>Confirmar Senha</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={handleChange('confirmPassword')}
-            value={values.confirmPassword}
-            placeholder="Confirme sua senha"
-            secureTextEntry
-          />
-          {touched.confirmPassword && errors.confirmPassword && (
-            <Text style={styles.error}>{errors.confirmPassword}</Text>
-          )}
+            <Text style={globalStyles.label}>Senha</Text>
+            <Input
+              onChangeText={handleChange('password')}
+              value={values.password}
+              placeholder="Digite sua senha"
+              secureTextEntry
+              error={touched.password && errors.password}
+            />
 
-          <Button title="Registrar" onPress={handleSubmit as any} />
-          <Button title="Já possui uma conta? Faça login" onPress={() => navigation.navigate('Login')} />
-        </View>
-      )}
-    </Formik>
+            <Text style={globalStyles.label}>Confirmação de Senha</Text>
+            <Input
+              onChangeText={handleChange('confirmPassword')}
+              value={values.confirmPassword}
+              placeholder="Confirme sua senha"
+              secureTextEntry
+              error={touched.confirmPassword && errors.confirmPassword}
+            />
+
+            <Button title="Registrar" onPress={handleSubmit} />
+
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={globalStyles.link}>Já possui uma conta? Faça login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </Formik>
+    </ScreenWrapper>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 20 },
-  input: { borderWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 8 },
-  error: { color: 'red', marginBottom: 10 },
-});
 
 export default Register;

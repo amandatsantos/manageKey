@@ -2,8 +2,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HomeStackParamList } from './types';
-import Home from '../screens/Welcome';
 import Details from '../screens/Details'; // Exemplo de outra tela
+import Home from '../screens/Home';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 

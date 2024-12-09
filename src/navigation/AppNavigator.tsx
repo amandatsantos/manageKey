@@ -6,11 +6,11 @@ import HomeStack from './HomeStack';
 import { useAuth } from '../contexts/AuthContext';
 
 const AppNavigator = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth(); // Este é o estado de autenticação
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <HomeStack /> : <AuthStack />}
+      {isAuthenticated ? <HomeStack /> : <AuthStack />} // Se autenticado, vai para o HomeStack
     </NavigationContainer>
   );
 };
