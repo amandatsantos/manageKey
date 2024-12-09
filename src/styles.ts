@@ -1,11 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
+
   label: {
     fontSize: 16,
     marginBottom: 5,
@@ -44,6 +40,14 @@ export default StyleSheet.create({
   },
   passwordText: {
     fontSize: 16,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#292024', // Cor de fundo semelhante à imagem
+    paddingHorizontal: 16, // Espaçamento opcional
+    paddingVertical: 16, // Espaçamento opcional
+    justifyContent: 'center',
+    padding: 20,
   },
   
 });

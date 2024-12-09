@@ -1,28 +1,26 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-import { useAuth } from '../contexts/AuthContext';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import CustomModal from '../components/Modal';
-import ScreenWrapper from '../components/scrennWrapper';
-import globalStyles from '../styles'; // Estilos globais
-import { loginSchema } from '../utils/validations';
-
+import { useAuth } from '../../contexts/AuthContext';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import CustomModal from '../../components/Modal';
+import ScreenWrapper from '../../components/scrennWrapper';
+import globalStyles from '../../styles';
+import { loginSchema } from '../../utils/validations';
 
 const Login = ({ navigation }: any) => {
   const { login, setIsAuthenticated } = useAuth();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMessage, setModalMessage] = React.useState('');
 
-  // Função de login
   const handleLogin = async (values: { email: string; password: string }) => {
     const success = await login(values.email, values.password);
     setModalMessage(success ? 'Login realizado com sucesso!' : 'Dados inválidos!');
     setModalVisible(true);
 
     if (success) {
-      setIsAuthenticated(true); // Atualiza o estado de autenticação no contexto
+      setIsAuthenticated(true);
       setTimeout(() => {
         setModalVisible(false);
         navigation.reset({

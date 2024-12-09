@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
-import { useAuth } from '../contexts/AuthContext'; // Importando o contexto
+import { useAuth } from '../../contexts/AuthContext'; // Importando o contexto
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ScreenWrapper from '../components/scrennWrapper';
-import Input from '../components/Input';
-import Button from '../components/Button';
-import CustomModal from '../components/Modal';
-import globalStyles from '../styles';
-import { forgetPasswordValidation } from '../utils/validations'; // Validação separada
+import ScreenWrapper from '../../components/scrennWrapper';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import CustomModal from '../../components/Modal';
+import globalStyles from '../../styles';
+import { forgetPasswordValidation } from '../../utils/validations'; // Validação separada
 
 const ForgetPassword = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] = useState(false);

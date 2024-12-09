@@ -2,10 +2,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AuthStackParamList } from './types';
-import Login from '../screens/Login';
-import Register from '../screens/Register';
-import Home from '../screens/Home';
-import ForgetPassword from '../screens/ForgetPassword';
+import Login from '../screens/Login/Login';
+import Register from '../screens/Register/Register';
+import Home from '../screens/Home/Home';
+import ForgetPassword from '../screens/ForgetPasseword/ForgetPassword';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 

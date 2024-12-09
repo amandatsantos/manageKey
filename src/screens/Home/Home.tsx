@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
-import Button from '../components/Button';
-import ScreenWrapper from '../components/scrennWrapper';
-import globalStyles from '../styles'; // Estilos globais
+import { useAuth } from '../../contexts/AuthContext';
+import Button from '../../components/Button';
+import ScreenWrapper from '../../components/scrennWrapper';
+import globalStyles from '../../styles'; // Estilos globais
 
 const Home = ({ navigation }: any) => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -18,7 +18,7 @@ const Home = ({ navigation }: any) => {
       <View style={globalStyles.container}>
       {isAuthenticated ? (
         <>
-          <Text style={globalStyles.welcomeText}>Bem-vindo, {user}!</Text>
+          <Text style={globalStyles.welcomeText}>Bem-vindo, {user?.fullname}!</Text>
 
           <View style={globalStyles.buttonContainer}>
             <Button title="Ver Senhas" onPress={() => navigation.navigate('ViewPasswords')} />

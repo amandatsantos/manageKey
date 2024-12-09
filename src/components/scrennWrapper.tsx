@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#292024', // Cor de fundo semelhante à imagem
     paddingHorizontal: 16, // Espaçamento opcional
     paddingVertical: 16, // Espaçamento opcional
+    justifyContent: 'center',
+    padding: 20,
   },
 });
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Formik } from 'formik';
-import ScreenWrapper from '../components/scrennWrapper';
-import Button from '../components/Button';
-import Input from '../components/Input';
-import globalStyles from '../styles'; // Estilos globais
-import { registerSchema } from '../utils/validations'; // Importação do esquema de validação
+import ScreenWrapper from '../../components/scrennWrapper';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import globalStyles from '../../styles'; // Estilos globais
+import { registerSchema } from '../../utils/validations'; // Importação do esquema de validação
 
 const Register = ({ navigation }: any) => {
   const { register } = useAuth();

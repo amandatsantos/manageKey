@@ -9,10 +9,18 @@ export type AuthStackParamList = {
   
   export type HomeStackParamList = {
     Home: undefined;
-    Details: { id: string }; // Exemplo de tela com parâmetro
+    DetailsPassword: {
+      passwordDetails: {
+        email: string | undefined;
+        id: any;
+        title: string;
+        password: string;
+        description: string;
+        user?: string;
+      };
+    };
     ViewPasswords: undefined;
-    ViewProfile :undefined;
+    ViewProfile: undefined;
     CreatePassword: undefined;
-
   };
   

@@ -2,6 +2,10 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-native"  // Adicionando essa linha para configurar o JSX
+    "jsx": "react-native" , // Adicionando essa linha para configurar o JSX,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ]
   }
 }
