@@ -38,6 +38,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+   buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
+  }
 });
 
 export default Button;

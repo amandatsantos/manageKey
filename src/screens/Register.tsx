@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useAuth} from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Formik } from 'formik';
 import ScreenWrapper from '../components/scrennWrapper';
 import Button from '../components/Button';

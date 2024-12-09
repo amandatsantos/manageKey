@@ -16,12 +16,18 @@ const Home = ({ navigation }: any) => {
   return (
     <ScreenWrapper>
       <View style={globalStyles.container}>
-        {isAuthenticated ? (
-          <>
-            <Text style={globalStyles.label}>Bem-vindo, {user}!</Text>
+      {isAuthenticated ? (
+        <>
+          <Text style={globalStyles.welcomeText}>Bem-vindo, {user}!</Text>
+
+          <View style={globalStyles.buttonContainer}>
+            <Button title="Ver Senhas" onPress={() => navigation.navigate('ViewPasswords')} />
+            <Button title="Criar Senha" onPress={() => navigation.navigate('CreatePassword')} />
+            <Button title="Ver Perfil" onPress={() => navigation.navigate('ViewProfile')} />
             <Button title="Sair" onPress={handleLogout} />
-          </>
-        ) : (
+          </View>
+        </>
+      ) :(
           <>
             <Text style={globalStyles.label}>Você não está logado.</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
@@ -35,3 +41,5 @@ const Home = ({ navigation }: any) => {
 };
 
 export default Home;
+
+

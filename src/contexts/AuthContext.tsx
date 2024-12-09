@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(false);  // Define como não autenticado ao fazer logout
   };
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string, fullname: string) => {
     try {
       // Recuperar dados existentes
       const storedUsers = await AsyncStorage.getItem('users');
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
   
       // Adicionar novo usuário
-      users[email] = password;
+      users[email] = { password, fullname };
   
       // Salvar no AsyncStorage
       await AsyncStorage.setItem('users', JSON.stringify(users));
@@ -67,6 +67,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
       // Validar e-mail e senha
       if (users[email] && users[email] === password) {
+        const userData = { email, fullname: users[email].fullname };
+
         // Salvar usuário autenticado
         await AsyncStorage.setItem('user', email);
         setUser(email);
