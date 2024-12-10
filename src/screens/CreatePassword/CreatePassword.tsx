@@ -6,6 +6,7 @@ import Input from '../../components/Input'; // Componente Input
 import Button from '../../components/Button'; // Componente Botão
 import styles from '../CreatePassword/style';
 import { useAuth } from '../../contexts/AuthContext'; // Contexto de autenticação
+import { useNavigation } from '@react-navigation/native'; // Navegação
 
 const CreatePassword = () => {
   const [title, setTitle] = useState('');
@@ -13,6 +14,7 @@ const CreatePassword = () => {
   const [password, setPassword] = useState('');
   const [description, setDescription] = useState('');
   const { user } = useAuth(); // Obter o usuário logado
+  const navigation = useNavigation(); // Hook de navegação
 
   const handleSavePassword = async () => {
     if (!user) {
@@ -41,6 +43,11 @@ const CreatePassword = () => {
       await AsyncStorage.setItem('passwords', JSON.stringify(passwordsList));
 
       Alert.alert('Sucesso', 'Senha salva com sucesso!');
+
+      // Após salvar, navegue de volta para ViewPasswords e atualize a tela
+      navigation.goBack(); // Voltar para a tela anterior (ViewPasswords)
+
+      // Limpar os campos após salvar
       setTitle('');
       setEmail('');
       setPassword('');

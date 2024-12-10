@@ -75,12 +75,7 @@ const DetailsPassword = () => {
     }
   };
 
-  useEffect(() => {
-    // Verifica se a senha pertence ao usuário logado
-    if (passwordDetails.email !== user?.email) {
-      Alert.alert('Acesso negado', 'Você não tem permissão para acessar esta senha.');
-    }
-  }, [passwordDetails, user]);
+  
 
   return (
     <ScreenWrapper>

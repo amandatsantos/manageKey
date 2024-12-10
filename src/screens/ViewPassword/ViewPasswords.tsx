@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamList } from '../../navigation/types';
 import { useAuth } from '../../contexts/AuthContext';  // Para acessar o usuário logado
+import { useFocusEffect } from '@react-navigation/native'; // Hook para atualizar a tela quando voltar
+
 import styles from '../ViewPassword/style';
 
 const ViewPasswords = () => {
@@ -16,19 +18,21 @@ const ViewPasswords = () => {
   const [filteredPasswords, setFilteredPasswords] = useState(passwords);
   const navigation = useNavigation<StackNavigationProp<HomeStackParamList, 'ViewPasswords'>>();
 
-  useEffect(() => {
-    const loadPasswords = async () => {
-      const storedPasswords = await AsyncStorage.getItem('passwords');
-      const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
-      
-      // Filtra as senhas para mostrar apenas as do usuário logado
-      const userPasswords = passwordsList.filter((password: any) => password.userId === user.id);
-      setPasswords(userPasswords);
-      setFilteredPasswords(userPasswords);  // Inicialmente, exibe todas as senhas do usuário
-    };
+  // Função para carregar as senhas
+  const loadPasswords = async () => {
+    const storedPasswords = await AsyncStorage.getItem('passwords');
+    const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
+    
+    // Filtra as senhas para mostrar apenas as do usuário logado
+    const userPasswords = passwordsList.filter((password: any) => password.userId === user.id);
+    setPasswords(userPasswords);
+    setFilteredPasswords(userPasswords);  // Inicialmente, exibe todas as senhas do usuário
+  };
 
+  // Usando useFocusEffect para garantir que as senhas sejam recarregadas sempre que a tela for acessada
+  useFocusEffect(() => {
     loadPasswords();
-  }, [user.id]);  // Recarrega as senhas sempre que o usuário mudar
+  });
 
   // Filtrar senhas conforme a pesquisa
   useEffect(() => {
