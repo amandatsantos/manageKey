@@ -8,20 +8,12 @@ import styles from './style';
 const Home = ({ navigation }: any) => {
   const { isAuthenticated, user, logout } = useAuth();
 
-  // Função de logout
-  const handleLogout = async () => {
-    await logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Login' }],
-    });
-  };
-
   useEffect(() => {
     if (!isAuthenticated) {
       navigation.replace('Login');
     }
   }, [isAuthenticated, navigation]);
+
 
   return (
     <ScreenWrapper>
@@ -41,7 +33,7 @@ const Home = ({ navigation }: any) => {
             <Button title="Ver Senhas" onPress={() => navigation.navigate('ViewPasswords')} />
             <Button title="Criar Senha" onPress={() => navigation.navigate('CreatePassword')} />
             <Button title="Ver Perfil" onPress={() => navigation.navigate('ViewProfile')} />
-            <Button title="Sair" onPress={handleLogout} />
+            <Button title="Sair" onPress={logout} />
           </View>
         ) : (
 
