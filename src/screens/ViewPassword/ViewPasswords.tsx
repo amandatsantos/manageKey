@@ -6,9 +6,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamList } from '../../navigation/types';
+import { useAuth } from '../../contexts/AuthContext';  // Para acessar o usuário logado
 import styles from '../ViewPassword/style';
 
 const ViewPasswords = () => {
+  const { user } = useAuth();  // Obtém o usuário logado
   const [passwords, setPasswords] = useState<{ title: string; password: string; description: string; user?: string }[]>([]);
   const [search, setSearch] = useState('');
   const [filteredPasswords, setFilteredPasswords] = useState(passwords);
@@ -18,12 +20,15 @@ const ViewPasswords = () => {
     const loadPasswords = async () => {
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
-      setPasswords(passwordsList);
-      setFilteredPasswords(passwordsList); // Inicialmente, exibe todas as senhas
+      
+      // Filtra as senhas para mostrar apenas as do usuário logado
+      const userPasswords = passwordsList.filter((password: any) => password.userId === user.id);
+      setPasswords(userPasswords);
+      setFilteredPasswords(userPasswords);  // Inicialmente, exibe todas as senhas do usuário
     };
 
     loadPasswords();
-  }, []);
+  }, [user.id]);  // Recarrega as senhas sempre que o usuário mudar
 
   // Filtrar senhas conforme a pesquisa
   useEffect(() => {
@@ -74,12 +79,10 @@ const ViewPasswords = () => {
 
       {/* Botão de Adicionar */}
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('CreatePassword')}>
-  <Ionicons name="add-outline" size={24} color="#fff" />
-</TouchableOpacity>
+        <Ionicons name="add-outline" size={24} color="#fff" />
+      </TouchableOpacity>
     </ScreenWrapper>
   );
 };
-
-
 
 export default ViewPasswords;

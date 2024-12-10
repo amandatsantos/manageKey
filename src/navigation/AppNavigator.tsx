@@ -10,9 +10,10 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-      {isAuthenticated ? <HomeStack /> : <AuthStack />} // Se autenticado, vai para o HomeStack
+      {isAuthenticated ? <HomeStack /> : <AuthStack />} 
     </NavigationContainer>
   );
 };
+
 
 export default AppNavigator;

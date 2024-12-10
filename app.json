@@ -1,5 +1,9 @@
 {
   "expo": {
+    "assetBundlePatterns": [
+      "assets/*",
+      "node_modules/@expo/vector-icons/fonts/*"
+    ],
     "name": "managekey",
     "slug": "managekey",
     "version": "1.0.0",
@@ -12,19 +16,43 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Este aplicativo requer acesso à câmera para funcionalidades adicionais.",
+        "NSLocationWhenInUseUsageDescription": "O aplicativo precisa acessar sua localização para fornecer serviços personalizados."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA",
+        "LOCATION"
+      ],
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "newArchEnabled": true,
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "description": "Aplicativo de gerenciamento de senhas com funcionalidades de autenticação e armazenamento seguro.",
+    "extra": {
+      "apiUrl": "https://api.managekey.com"
+    }
   }
 }

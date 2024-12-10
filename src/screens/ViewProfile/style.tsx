@@ -61,20 +61,37 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo transparente
+  },
+  modalContent: {
+    backgroundColor: 'white',
     padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
   },
   modalHeader: {
-    fontSize: 20,
-    color: '#fff',
-    marginBottom: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   modalText: {
-    color: '#fff',
+    fontSize: 16,
     marginBottom: 20,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  button: {
+    backgroundColor: '#3498db',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
   },
   buttonText: {
     color: '#fff',
+    fontSize: 16,
   },
-  
 });

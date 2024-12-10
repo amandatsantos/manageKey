@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,9 +6,11 @@ import ScreenWrapper from '../../components/scrennWrapper';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParamList } from '../../navigation/types';
 import styles from './style';
+import { useAuth } from '../../contexts/AuthContext';  // Para acessar o usuário logado
 
 const DetailsPassword = () => {
-  const route = useRoute<RouteProp<HomeStackParamList, 'DetailsPassword'>>(); 
+  const { user } = useAuth();  // Obtém o usuário logado
+  const route = useRoute<RouteProp<HomeStackParamList, 'DetailsPassword'>>();
   const { passwordDetails } = route.params;
 
   const [editedDetails, setEditedDetails] = useState(passwordDetails);
@@ -16,35 +18,55 @@ const DetailsPassword = () => {
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
+  // Toggle para mostrar ou esconder a senha
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  // Função para salvar as alterações
   const handleSaveChanges = async () => {
-    if (!editedDetails.title || !editedDetails.password || !editedDetails.user) {
-      Alert.alert('Erro', 'O título, o usuário e a senha são obrigatórios.');
+    if (!editedDetails.title || !editedDetails.password || !editedDetails.email) {
+      Alert.alert('Erro', 'O título, o email e a senha são obrigatórios.');
       return;
     }
 
     try {
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwords = storedPasswords ? JSON.parse(storedPasswords) : [];
-      const updatedPasswords = passwords.map((p: any) =>
-        p.id === editedDetails.id ? editedDetails : p
+
+      // Filtra as senhas para garantir que só as senhas do usuário atual sejam acessadas
+      const userPasswords = passwords.filter((p: any) => p.userId === user.id);
+
+      // Atualiza a senha correta do usuário
+      const updatedPasswords = userPasswords.map((p: any) =>
+        p.id === editedDetails.id ? { ...p, ...editedDetails } : p
       );
+
+      // Salva novamente as senhas no AsyncStorage
       await AsyncStorage.setItem('passwords', JSON.stringify(updatedPasswords));
       Alert.alert('Sucesso', 'Detalhes atualizados!');
-      setEditModalVisible(false);
+      
+      // Atualiza a senha na tela imediatamente
+      setEditedDetails({ ...editedDetails });
+      setEditModalVisible(false);  // Fecha o modal
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível salvar as alterações.');
     }
   };
 
+  // Função para excluir a senha
   const handleDeletePassword = async () => {
     try {
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwords = storedPasswords ? JSON.parse(storedPasswords) : [];
-      const updatedPasswords = passwords.filter((p: any) => p.id !== passwordDetails.id);
+
+      // Filtra as senhas do usuário atual
+      const userPasswords = passwords.filter((p: any) => p.userId === user.id);
+
+      // Exclui a senha do usuário
+      const updatedPasswords = userPasswords.filter((p: any) => p.id !== passwordDetails.id);
+
+      // Atualiza as senhas no AsyncStorage
       await AsyncStorage.setItem('passwords', JSON.stringify(updatedPasswords));
       Alert.alert('Sucesso', 'Senha deletada!');
       setDeleteModalVisible(false);
@@ -53,17 +75,24 @@ const DetailsPassword = () => {
     }
   };
 
+  useEffect(() => {
+    // Verifica se a senha pertence ao usuário logado
+    if (passwordDetails.email !== user?.email) {
+      Alert.alert('Acesso negado', 'Você não tem permissão para acessar esta senha.');
+    }
+  }, [passwordDetails, user]);
+
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Text style={styles.header}>{passwordDetails.title}</Text>
+        <Text style={styles.header}>{editedDetails.title}</Text>
 
         {/* Nome de Usuário */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Usuário</Text>
           <TextInput
             style={styles.input}
-            value={passwordDetails.email}
+            value={editedDetails.email}  // Usando o estado editado
             editable={false}  // Torne editável conforme necessário
           />
         </View>
@@ -74,7 +103,7 @@ const DetailsPassword = () => {
           <View style={styles.passwordContainer}>
             <TextInput
               style={styles.input}
-              value={passwordDetails.password}
+              value={editedDetails.password}  // Usando o estado editado
               secureTextEntry={!showPassword}
               editable={false}  // Torne editável conforme necessário
             />
@@ -93,7 +122,7 @@ const DetailsPassword = () => {
           <Text style={styles.label}>Descrição</Text>
           <TextInput
             style={[styles.input, { height: 80 }]}
-            value={passwordDetails.description || 'Sem descrição'}
+            value={editedDetails.description || 'Sem descrição'}  // Usando o estado editado
             multiline
             editable={false}  // Torne editável conforme necessário
           />
@@ -104,7 +133,7 @@ const DetailsPassword = () => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              setEditedDetails(passwordDetails);
+              setEditedDetails({ ...passwordDetails });  // Passa os detalhes originais para edição
               setEditModalVisible(true);
             }}
           >
@@ -135,8 +164,8 @@ const DetailsPassword = () => {
             />
             <TextInput
               style={styles.input}
-              value={editedDetails.user}
-              onChangeText={(text) => setEditedDetails({ ...editedDetails, user: text })}
+              value={editedDetails.email}
+              onChangeText={(text) => setEditedDetails({ ...editedDetails, email: text })}
               placeholder="Usuário"
             />
             <TextInput

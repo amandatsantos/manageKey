@@ -1,11 +1,14 @@
-// src/contexts/AuthContext.ts
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { encryptData, decryptData, generateKeyAndIV } from '../utils/cryptoUtils'; // Importando as funções de criptografia
+import CryptoJS from 'crypto-js';
+import Config from 'react-native-config';
+import { v4 as uuidv4 } from 'uuid'; // npm install uuid
+
+const SECRET_KEY = Config.SECRET_KEY || 'default_secret_key';
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  user: string | null;
+  user: { id: string; email: string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   register: (email: string, password: string, fullname: string) => Promise<boolean>;
@@ -16,55 +19,58 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
 
-  // Carregar estado persistido ao inicializar o contexto
   useEffect(() => {
     const loadUser = async () => {
-      const storedUser = await AsyncStorage.getItem('user');
-      if (storedUser) {
-        const decryptedUser = decryptData(storedUser); // Descriptografa o usuário armazenado
-        setUser(decryptedUser);
-        setIsAuthenticated(true);
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar usuário:', error);
       }
     };
     loadUser();
   }, []);
 
   const logout = async () => {
-    await AsyncStorage.removeItem('user');
-    setUser(null);
-    setIsAuthenticated(false);
+    try {
+      await AsyncStorage.removeItem('user');
+      setUser(null);
+      setIsAuthenticated(false);  // Garante que o usuário será deslogado
+    } catch (error) {
+      console.error('Erro ao realizar logout:', error);
+    }
   };
 
   const register = async (email: string, password: string, fullname: string) => {
     try {
-      const storedUsers = await AsyncStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(decryptData(storedUsers)) : {}; // Descriptografa os usuários armazenados
+      const userId = uuidv4();
+      const userKey = `user_${userId}`;
 
-      // Verificar se o usuário já existe
-      if (users[email]) {
+      const userList = await AsyncStorage.getItem('user_list');
+      const parsedList = userList ? JSON.parse(userList) : [];
+      if (parsedList.some((u: { email: string }) => u.email === email)) {
         console.error('Usuário já existe!');
         return false;
       }
 
-      // Gerar chave e IV de forma segura
-      const { key, iv } = generateKeyAndIV();
+      const encryptedPassword = CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
 
-      // Criptografar a senha com a chave e IV
-      const encryptedPassword = encryptData(password, key, iv);
+      const userData = { id: userId, email, fullname, password: encryptedPassword };
+      await AsyncStorage.setItem(userKey, JSON.stringify(userData));
+      await AsyncStorage.setItem('user_list', JSON.stringify([...parsedList, { id: userId, email }]));
+      await AsyncStorage.setItem('user', JSON.stringify({ id: userId, email }));
 
-      // Salvar o usuário com a senha criptografada
-      users[email] = { password: encryptedPassword, fullname };
-
-      // Criptografa e salva os usuários atualizados
-      await AsyncStorage.setItem('users', encryptData(JSON.stringify(users), key, iv));
-
-      const userData = JSON.stringify({ email, fullname });
-      await AsyncStorage.setItem('user', encryptData(userData, key, iv)); // Criptografa os dados do usuário atual
-      setUser(userData);
+      setUser({ id: userId, email });
       setIsAuthenticated(true);
-
       return true;
     } catch (error) {
       console.error('Erro ao registrar usuário:', error);
@@ -74,59 +80,83 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const storedUsers = await AsyncStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(decryptData(storedUsers)) : {}; // Descriptografa os usuários armazenados
-
-      if (users[email]) {
-        const encryptedPassword = users[email].password;
-        // Descriptografar a senha
-        const { key, iv } = generateKeyAndIV();
-        const decryptedPassword = decryptData(encryptedPassword, key, iv);
-
-        // Comparar a senha fornecida com a senha descriptografada
-        if (decryptedPassword === password) {
-          const userData = JSON.stringify({ email, fullname: users[email].fullname });
-          await AsyncStorage.setItem('user', encryptData(userData, key, iv)); // Criptografa os dados do usuário autenticado
-          setUser(userData);
-          setIsAuthenticated(true);
-          return true;
+      const userList = await AsyncStorage.getItem('user_list');
+      const parsedList = userList ? JSON.parse(userList) : [];
+      const userEntry = parsedList.find((u: { email: string }) => u.email === email);
+  
+      if (userEntry) {
+        const userKey = `user_${userEntry.id}`;
+        const storedUser = await AsyncStorage.getItem(userKey);
+  
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          const decryptedPassword = CryptoJS.AES.decrypt(userData.password, SECRET_KEY).toString(CryptoJS.enc.Utf8);
+  
+          if (decryptedPassword === password) {
+            await AsyncStorage.setItem('user', JSON.stringify({ id: userData.id, email: userData.email }));
+            setUser({ id: userData.id, email: userData.email });
+            setIsAuthenticated(true);
+            return true;
+          }
         }
       }
-
       return false;
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       return false;
     }
   };
-
   const resetPassword = async (email: string, newPassword: string) => {
     try {
-      const storedUsers = await AsyncStorage.getItem('users');
-      const users = storedUsers ? JSON.parse(decryptData(storedUsers)) : {}; // Descriptografa os usuários armazenados
+      const userList = await AsyncStorage.getItem('user_list');
+      const parsedList = userList ? JSON.parse(userList) : [];
+      const userEntry = parsedList.find((u: { email: string }) => u.email === email);
 
-      if (users[email]) {
-        // Gerar chave e IV de forma segura
-        const { key, iv } = generateKeyAndIV();
+      if (userEntry) {
+        const userKey = `user_${userEntry.id}`;
+        const storedUser = await AsyncStorage.getItem(userKey);
 
-        // Criptografar a nova senha
-        const encryptedPassword = encryptData(newPassword, key, iv);
-        users[email].password = encryptedPassword;
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          const encryptedPassword = CryptoJS.AES.encrypt(newPassword, SECRET_KEY).toString();
 
-        // Criptografa e salva os usuários atualizados
-        await AsyncStorage.setItem('users', encryptData(JSON.stringify(users), key, iv));
-        return true;
+          userData.password = encryptedPassword;
+          await AsyncStorage.setItem(userKey, JSON.stringify(userData));
+          return true;
+        }
       }
-
       return false;
     } catch (error) {
-      console.error('Erro ao resetar a senha:', error);
+      console.error('Erro ao resetar senha:', error);
       return false;
     }
   };
 
+  const updateUser = async (email: string, fullname: string) => {
+    try {
+      if (user) {
+        // Atualizar os dados na AsyncStorage
+        const userKey = `user_${user.id}`;
+        const storedUser = await AsyncStorage.getItem(userKey);
+  
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          userData.email = email;
+          userData.fullname = fullname;
+  
+          // Salvar os dados atualizados na AsyncStorage
+          await AsyncStorage.setItem(userKey, JSON.stringify(userData));
+          
+          // Atualizar o estado do contexto
+          setUser({ id: user.id, email: email, fullname: fullname });
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+    }
+  };
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, register, resetPassword }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateUser, register, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

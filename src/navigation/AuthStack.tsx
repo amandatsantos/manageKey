@@ -5,7 +5,7 @@ import { AuthStackParamList } from './types';
 import Login from '../screens/Login/Login';
 import Register from '../screens/Register/Register';
 import Home from '../screens/Home/Home';
-import ForgetPassword from '../screens/ForgetPasseword/ForgetPassword';
+import ForgetPassword from '../screens/ForgetPassword/ForgetPassword';
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
