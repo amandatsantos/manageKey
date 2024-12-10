@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity , Image} from 'react-native';
 import { Formik } from 'formik';
 import { useAuth } from '../../contexts/AuthContext';
 import Input from '../../components/Input';
@@ -50,6 +50,10 @@ const Login = ({ navigation }: any) => {
       >
         {({ handleChange, handleSubmit, values, errors, touched }) => (
           <View style={globalStyles.container}>
+
+<Image source={require('../../../assets/imagens/iconApp.png')} 
+              style={style.logo} 
+            />
             <Text style={globalStyles.label}>E-mail</Text>
             <Input
               value={values.email}
@@ -57,6 +61,8 @@ const Login = ({ navigation }: any) => {
               onChangeText={handleChange('email')}
               error={touched.email && errors.email}
             />
+
+            
 
             <Text style={globalStyles.label}>Senha</Text>
             <View style={style.inputContainer}>

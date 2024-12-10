@@ -37,7 +37,15 @@ export default StyleSheet.create({
         color: '#007BFF',
         textAlign: 'center',
         marginTop: 15,
-      }
+      },
+      logo: {
+        width: 100, // Ajuste o tamanho conforme necessário
+        height: 100,
+        alignSelf: 'center', // Centraliza a imagem horizontalmente
+        marginBottom: 20, // Espaçamento abaixo da imagem
+        marginTop: 50, // Adiciona espaço acima da logo
+      },
+      
     });
     
  

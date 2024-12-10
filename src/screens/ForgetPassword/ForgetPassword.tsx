@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Formik } from 'formik';
 import { useAuth } from '../../contexts/AuthContext'; // Importando o contexto
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,7 @@ import Button from '../../components/Button';
 import CustomModal from '../../components/Modal';
 import globalStyles from '../../styles';
 import { forgetPasswordValidation } from '../../utils/validations'; // Validação separada
+import style from './style';
 
 const ForgetPassword = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -53,6 +54,8 @@ const ForgetPassword = ({ navigation }: any) => {
 
   return (
     <ScreenWrapper>
+
+<Image source={require('../../../assets/imagens/iconApp.png')} style={style.logo}/>
       <Formik
         initialValues={{ email: '' }}
         validationSchema={forgetPasswordValidation} // Validação importada

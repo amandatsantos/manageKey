@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { Formik } from 'formik';
 import ScreenWrapper from '../../components/scrennWrapper';
@@ -38,6 +38,8 @@ const Register = ({ navigation }: any) => {
 
   return (
     <ScreenWrapper>
+
+<Image source={require('../../../assets/imagens/iconApp.png')}style={style.logo}/>
       <Formik
         initialValues={{ email: '', password: '', confirmPassword: '', fullname: '' }}
         validationSchema={registerSchema}  // Usando esquema de validação
