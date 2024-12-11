@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Modal, Alert } from 'react-nat
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ScreenWrapper from '../../components/scrennWrapper';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { HomeStackParamList } from '../../navigation/types';
 import styles from './style';
 import { useAuth } from '../../contexts/AuthContext';  // Para acessar o usuário logado
@@ -12,6 +12,8 @@ const DetailsPassword = () => {
   const { user } = useAuth();  // Obtém o usuário logado
   const route = useRoute<RouteProp<HomeStackParamList, 'DetailsPassword'>>();
   const { passwordDetails } = route.params;
+
+  const navigation = useNavigation(); // Navegação para voltar à tela de visualização
 
   const [editedDetails, setEditedDetails] = useState(passwordDetails);
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +37,7 @@ const DetailsPassword = () => {
       const passwords = storedPasswords ? JSON.parse(storedPasswords) : [];
 
       // Filtra as senhas para garantir que só as senhas do usuário atual sejam acessadas
-      const userPasswords = passwords.filter((p: any) => p.userId === user.id);
+      const userPasswords = passwords.filter((p: any) => p.userId === user?.id);
 
       // Atualiza a senha correta do usuário
       const updatedPasswords = userPasswords.map((p: any) =>
@@ -57,26 +59,35 @@ const DetailsPassword = () => {
   // Função para excluir a senha
   const handleDeletePassword = async () => {
     try {
+      // Recupera as senhas armazenadas no AsyncStorage
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwords = storedPasswords ? JSON.parse(storedPasswords) : [];
-
-      // Filtra as senhas do usuário atual
-      const userPasswords = passwords.filter((p: any) => p.userId === user.id);
-
-      // Exclui a senha do usuário
-      const updatedPasswords = userPasswords.filter((p: any) => p.id !== passwordDetails.id);
-
-      // Atualiza as senhas no AsyncStorage
-      await AsyncStorage.setItem('passwords', JSON.stringify(updatedPasswords));
+  
+      // Encontra o índice da senha que corresponde ao passwordDetails.id
+      const indexToDelete = passwords.findIndex(
+        (p: any) => p.id === passwordDetails.id && p.userId === user?.id
+      );
+  
+      if (indexToDelete === -1) {
+        Alert.alert('Erro', 'Senha não encontrada!');
+        return;
+      }
+  
+      // Remove a senha do array de senhas
+      passwords.splice(indexToDelete, 1);
+  
+      // Salva novamente o array de senhas no AsyncStorage sem a senha deletada
+      await AsyncStorage.setItem('passwords', JSON.stringify(passwords));
+  
       Alert.alert('Sucesso', 'Senha deletada!');
-      setDeleteModalVisible(false);
+      setDeleteModalVisible(false);  // Fecha o modal de exclusão
+  
+      // Navega de volta para a tela anterior (após a exclusão)
+      navigation.goBack();
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível deletar a senha.');
     }
   };
-
-  
-
   return (
     <ScreenWrapper>
       <View style={styles.container}>

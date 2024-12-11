@@ -7,6 +7,7 @@ import Button from '../../components/Button'; // Componente Botão
 import styles from '../CreatePassword/style';
 import { useAuth } from '../../contexts/AuthContext'; // Contexto de autenticação
 import { useNavigation } from '@react-navigation/native'; // Navegação
+import { v4 as uuidv4 } from 'uuid'; // Importa a função para gerar UUID
 
 const CreatePassword = () => {
   const [title, setTitle] = useState('');
@@ -28,10 +29,13 @@ const CreatePassword = () => {
     }
 
     try {
+      // Recupera as senhas armazenadas
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
 
+      // Cria um novo objeto de senha com o UUID
       const newPassword = {
+        id: uuidv4(), // Gerar um UUID único para cada senha
         title,
         email,
         password,
@@ -39,7 +43,10 @@ const CreatePassword = () => {
         userId: user.id, // Associar ao usuário logado
       };
 
+      // Adiciona a nova senha à lista
       passwordsList.push(newPassword);
+
+      // Salva a lista atualizada de senhas
       await AsyncStorage.setItem('passwords', JSON.stringify(passwordsList));
 
       Alert.alert('Sucesso', 'Senha salva com sucesso!');
