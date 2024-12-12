@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   
     paddingHorizontal: 15,
     fontSize: 16,
-    backgroundColor: '#e8f0ff', // Fundo claro
+    backgroundColor: '#D1E3DD', // Fundo claro
     color: '#292024', // Texto escuro
   },
   inputError: {
