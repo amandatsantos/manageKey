@@ -139,7 +139,7 @@ const Profile = ({ navigation }) => {
                   <Ionicons
                     name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
                     size={20}
-                    color="#fff"
+                    color="#6c6772"
                   />
                 </TouchableOpacity>
               </View>
@@ -159,7 +159,7 @@ const Profile = ({ navigation }) => {
                   setEditModalVisible(true);
                 }}
               >
-                <Ionicons name="create-outline" size={24} color="#fff" />
+                <Ionicons name="create-outline" size={24} color="#6c6772" />
               </TouchableOpacity>
   
               {/* Botão de Deletar */}
@@ -167,7 +167,7 @@ const Profile = ({ navigation }) => {
                 style={[styles.button, styles.deleteButton]}
                 onPress={() => setDeleteModalVisible(true)}
               >
-                <Ionicons name="trash-outline" size={24} color="#fff" />
+                <Ionicons name="trash-outline" size={24} color="#6c6772" />
               </TouchableOpacity>
             </View>
           </>

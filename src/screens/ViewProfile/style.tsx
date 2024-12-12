@@ -26,10 +26,10 @@ export default StyleSheet.create({
     fontSize: 16,
   },
   input: {
-    backgroundColor: '#6c6772',
+    backgroundColor: '#D1E3DD',
     borderRadius: 8,
     padding: 12,
-    color: '#fff',
+    color: '#000000',
     width: '100%',  // Ajusta a largura do input
   },
   passwordContainer: {
@@ -55,7 +55,10 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   deleteButton: {
-    backgroundColor: '#ff6b6b',
+    backgroundColor: '#D1E3DD',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
   },
   modalContainer: {
     flex: 1,
@@ -85,7 +88,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   button: {
-    backgroundColor: '#3498db',
+   backgroundColor: '#D1E3DD',
     padding: 10,
     borderRadius: 5,
     marginVertical: 5,

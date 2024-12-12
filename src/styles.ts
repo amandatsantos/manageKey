@@ -50,4 +50,6 @@ export default StyleSheet.create({
     padding: 20,
   },
     
+
+  
 });
