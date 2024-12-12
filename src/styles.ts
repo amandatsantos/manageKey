@@ -49,5 +49,5 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  
+    
 });

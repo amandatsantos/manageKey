@@ -80,7 +80,7 @@ const Register = ({ navigation }: any) => {
     <Ionicons
       name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
       size={20}
-      color="#FFA500"  // Mudando a cor do ícone para laranja, por exemplo
+      color="#6c6772"  // Mudando a cor do ícone para casar com o background
     />
   </TouchableOpacity>
 </View>
@@ -102,7 +102,7 @@ const Register = ({ navigation }: any) => {
     <Ionicons
       name={confirmPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
       size={20}
-      color="#FFA500"  // Mudando a cor do ícone para laranja, por exemplo
+      color="#6c6772"  // Mudando a cor do ícone para casar com background
     />
   </TouchableOpacity>
 </View>

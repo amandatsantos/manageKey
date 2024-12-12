@@ -46,6 +46,7 @@ export default StyleSheet.create({
         marginTop: 50, // Adiciona espaço acima da logo
       },
       
+      
     });
     
  
