@@ -20,7 +20,12 @@ export type AuthStackParamList = {
       };
     };
     ViewPasswords: undefined;
-    ViewProfile: undefined;
+    ViewProfile: {
+      email: string;
+      fullname: string;
+      id: string;
+      password: string;
+    };
     CreatePassword: undefined;
   };
   

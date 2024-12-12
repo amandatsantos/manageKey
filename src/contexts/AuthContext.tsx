@@ -12,7 +12,7 @@ type AuthContextType = {
   user: { id: string; email: string, fullname: string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  updateUser: (email: string, fullname: string) => Promise<void>; 
+  updateUser: (email: string, fullname: string, password: string) => Promise<void>; 
   register: (email: string, password: string, fullname: string) => Promise<boolean>;
   resetPassword: (email: string, newPassword: string) => Promise<boolean>;
 };
@@ -21,12 +21,13 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ id: string; email: string, fullname:string } | null>(null);
+  const [user, setUser] = useState<{ id: string; email: string, fullname:string, password:string } | null>(null);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
+        console.log(storedUser)
         if (storedUser) {
           const userData = JSON.parse(storedUser);
           setUser(userData);
@@ -56,24 +57,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const userId = uuidv4();
       const userKey = `user_${userId}`;
-
+  
+      // Recupera a lista de usuários e verifica duplicidade
       const userList = await AsyncStorage.getItem('user_list');
       const parsedList = userList ? JSON.parse(userList) : [];
       if (parsedList.some((u: { email: string }) => u.email === email)) {
         Alert.alert('Usuário com esse email já existe!');
-        // console.error('Usuário já existe!');
         return false;
       }
-
+  
+      // Criptografa a senha
       const encryptedPassword = CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
-
+  
+      // Salva os dados do usuário
       const userData = { id: userId, email, fullname, password: encryptedPassword };
       await AsyncStorage.setItem(userKey, JSON.stringify(userData));
       await AsyncStorage.setItem('user_list', JSON.stringify([...parsedList, { id: userId, email }]));
-      await AsyncStorage.setItem('user', JSON.stringify({ id: userId, email }));
-
-      setUser({ id: userId, email, fullname });
+      await AsyncStorage.setItem('user', JSON.stringify({ id: userId, email, fullname, password }));
+  
+      // Atualiza o estado do usuário e autenticação
+      setUser({ id: userId, email, fullname, password });
       setIsAuthenticated(true);
+  
       return true;
     } catch (error) {
       console.error('Erro ao registrar usuário:', error);
@@ -97,7 +102,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
           if (decryptedPassword === password) {
             await AsyncStorage.setItem('user', JSON.stringify({ id: userData.id, email: userData.email }));
-            setUser({ id: userData.id, email: userData.email, fullname: userData.fullname });
+            setUser({ id: userData.id, email: userData.email, fullname: userData.fullname , password: userData.password});
             setIsAuthenticated(true);
             return true;
           }
@@ -135,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateUser = async (email: string, fullname: string) => {
+  const updateUser = async (email: string, fullname: string, password:string) => {
     try {
       if (user) {
         // Atualizar os dados na AsyncStorage
@@ -146,12 +151,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData = JSON.parse(storedUser);
           userData.email = email;
           userData.fullname = fullname;
+          userData.password = password;
+
   
           // Salvar os dados atualizados na AsyncStorage
           await AsyncStorage.setItem(userKey, JSON.stringify(userData));
           
           // Atualizar o estado do contexto
-          setUser({ id: user.id, email: user.email, fullname: user.fullname });
+          setUser({ id: user.id, email: user.email, fullname: user.fullname, password: user.password });
         }
       }
     } catch (error) {
