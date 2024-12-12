@@ -38,9 +38,9 @@ const Profile = ({ navigation }) => {
 
       // Atualize apenas os campos que foram alterados
       const updatedProfile = {
-        email: editedProfile.email || profile?.email,
-        fullname: editedProfile.fullname || profile?.fullname,
-        password: editedProfile.password || profile?.password,
+        email: editedProfile.email || profile?.email || '',
+        fullname: editedProfile.fullname || profile?.fullname || '',
+        password: editedProfile.password || profile?.password || '',
       };
 
       await AsyncStorage.setItem('user', JSON.stringify(updatedProfile));
@@ -172,7 +172,7 @@ const Profile = ({ navigation }) => {
             </View>
           </>
         ) : (
-          <Text style={styles.loadingText}>Carregando perfil...</Text>  // Mensagem de carregamento enquanto os dados não estão disponíveis
+          <Text >Carregando perfil...</Text>  // Mensagem de carregamento enquanto os dados não estão disponíveis
         )}
   
         {/* Modal de Edição */}

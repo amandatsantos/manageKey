@@ -10,7 +10,7 @@ import globalStyles from '../../styles';
 import { loginSchema } from '../../utils/validations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
-import style from './style';  // Certifique-se de que o estilo está sendo importado corretamente
+import style from './style';  
 
 const Login = ({ navigation }: any) => {
   const { login } = useAuth();
@@ -72,7 +72,6 @@ const Login = ({ navigation }: any) => {
                 onChangeText={handleChange('password')}
                 secureTextEntry={!passwordVisible}
                 error={touched.password && errors.password}
-                style={style.input}
               />
               <TouchableOpacity
                 onPress={() => setPasswordVisible(!passwordVisible)}
