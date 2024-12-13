@@ -36,6 +36,8 @@ const Profile = () => {
     };
 
     loadProfile(); // Call the function inside useEffect
+
+    loadProfile(); // Call the function inside useEffect
   }, []);
 
   const handleSaveChanges = async () => {

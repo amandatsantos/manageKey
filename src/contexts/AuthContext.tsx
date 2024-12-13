@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const loadUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
-        console.log(storedUser)
         if (storedUser) {
           const userData = JSON.parse(storedUser);
           setUser(userData);
@@ -57,6 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userId = uuidv4();
       const userKey = `user_${userId}`;
 
+
       const userList = await AsyncStorage.getItem('user_list');
       const parsedList = userList ? JSON.parse(userList) : [];
       if (parsedList.some((u: { email: string }) => u.email === email)) {
@@ -65,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const encryptedPassword = CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
+
 
       const userData = { id: userId, email, fullname, password: encryptedPassword };
       await AsyncStorage.setItem(userKey, JSON.stringify(userData));
