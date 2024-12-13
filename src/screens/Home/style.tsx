@@ -30,7 +30,7 @@ export default StyleSheet.create({
       marginTop: 20,
     },
     loginButton: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: '#D1E3DD',
       paddingVertical: 10,
       paddingHorizontal: 40,
       borderRadius: 25,
