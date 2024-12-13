@@ -6,7 +6,7 @@ import styles from './style';
 import ScreenWrapper from '../../components/scrennWrapper';
 import { useAuth } from '../../contexts/AuthContext';
 
-const Profile = ({  }) => {
+const Profile = () => {
   const { logout } = useAuth();
   const [profile, setProfile] = useState<{ email: string; fullname: string; password: string } | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -25,13 +25,14 @@ const Profile = ({  }) => {
         const parsedUser = JSON.parse(storedUser);
         setProfile({
           email: parsedUser.email || '',
-          fullname: parsedUser.fullname ||'',
+          fullname: parsedUser.fullname || '',
           password: parsedUser.password || '',
         });
-        console.log(setProfile)
+        console.log('Profile loaded:', parsedUser);
       }
     };
-    loadProfile();
+
+    loadProfile(); // Call the function inside useEffect
   }, []);
 
   const handleSaveChanges = async () => {
@@ -97,12 +98,12 @@ const Profile = ({  }) => {
     <ScreenWrapper>
       <View style={styles.container}>
         <Text style={styles.header}></Text>
-  
+
         {/* Ícone de Usuário */}
         <View style={styles.avatar}>
           <Ionicons name="person-circle-outline" size={80} color="#fff" />
         </View>
-  
+
         {profile ? (  // Verifique se o profile está carregado antes de renderizar os campos
           <>
             {/* E-mail */}
@@ -115,7 +116,7 @@ const Profile = ({  }) => {
                 placeholderTextColor="#c0c0c0"
               />
             </View>
-  
+
             {/* Nome do Usuário */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Usuário</Text>
@@ -126,7 +127,7 @@ const Profile = ({  }) => {
                 placeholderTextColor="#c0c0c0"
               />
             </View>
-  
+
             {/* Senha */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Senha</Text>
@@ -150,7 +151,7 @@ const Profile = ({  }) => {
                 </TouchableOpacity>
               </View>
             </View>
-  
+
             {/* Botões */}
             <View style={styles.buttonsContainer}>
               {/* Botão de Editar */}
@@ -167,7 +168,7 @@ const Profile = ({  }) => {
               >
                 <Ionicons name="create-outline" size={24} color="#6c6772" />
               </TouchableOpacity>
-  
+
               {/* Botão de Deletar */}
               <TouchableOpacity
                 style={[styles.button, styles.deleteButton]}
@@ -178,54 +179,54 @@ const Profile = ({  }) => {
             </View>
           </>
         ) : (
-          <Text >Carregando perfil...</Text>  // Mensagem de carregamento enquanto os dados não estão disponíveis
+          <Text>Carregando perfil...</Text>  // Mensagem de carregamento enquanto os dados não estão disponíveis
         )}
-  
+
         {/* Modal de Edição */}
         <Modal
-  visible={editModalVisible}
-  animationType="slide"
-  transparent={true}
-  onRequestClose={() => setEditModalVisible(false)}
->
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      <Text style={styles.modalHeader}>Editar Perfil</Text>
+          visible={editModalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setEditModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalHeader}>Editar Perfil</Text>
 
-      <TextInput
-        style={[styles.input, styles.textInput]}
-        value={editedProfile.email}
-        onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
-        placeholder="E-mail"
-        placeholderTextColor="#32292F"
-      />
-      <TextInput
-        style={[styles.input, styles.textInput]}
-        value={editedProfile.fullname}
-        onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
-        placeholder="Nome de Usuário"
-        placeholderTextColor="#32292F"
-      />
-      <TextInput
-        style={[styles.input, styles.textInput]}
-        value={editedProfile.password}
-        onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
-        placeholder="Senha"
-        placeholderTextColor="#32292F"
-        secureTextEntry={true}
-      />
+              <TextInput
+                style={[styles.input, styles.textInput]}
+                value={editedProfile.email}
+                onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
+                placeholder="E-mail"
+                placeholderTextColor="#32292F"
+              />
+              <TextInput
+                style={[styles.input, styles.textInput]}
+                value={editedProfile.fullname}
+                onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
+                placeholder="Nome de Usuário"
+                placeholderTextColor="#32292F"
+              />
+              <TextInput
+                style={[styles.input, styles.textInput]}
+                value={editedProfile.password}
+                onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
+                placeholder="Senha"
+                placeholderTextColor="#32292F"
+                secureTextEntry={true}
+              />
 
-      <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
-        <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
-      </TouchableOpacity>
+              <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
+                <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
+              </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
-        <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
-  
+              <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
+                <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      
         {/* Modal de Exclusão */}
         <Modal
           visible={deleteModalVisible}
@@ -237,7 +238,7 @@ const Profile = ({  }) => {
             <View style={styles.modalContent}>
               <Text style={styles.modalHeader}>Excluir Conta</Text>
               <Text style={styles.modalHeader}>Tem certeza de que deseja excluir sua conta?</Text>
-  
+
               <View style={styles.modalButtons}>
                 <TouchableOpacity onPress={handleDeleteAccount} style={styles.button}>
                   <Text style={styles.buttonText}>Excluir</Text>
@@ -252,7 +253,6 @@ const Profile = ({  }) => {
       </View>
     </ScreenWrapper>
   );
-  
 };
 
 export default Profile;
