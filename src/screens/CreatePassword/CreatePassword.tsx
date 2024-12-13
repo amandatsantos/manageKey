@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Alert, TextInput } from 'react-native';
+import { View, Text, Alert, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ScreenWrapper from '../../components/scrennWrapper'; // Componente Layout
 import Input from '../../components/Input'; // Componente Input
@@ -7,7 +7,6 @@ import Button from '../../components/Button'; // Componente Botão
 import styles from '../CreatePassword/style';
 import { useAuth } from '../../contexts/AuthContext'; // Contexto de autenticação
 import { useNavigation } from '@react-navigation/native'; // Navegação
-import { v4 as uuidv4 } from 'uuid'; // Importa a função para gerar UUID
 
 const CreatePassword = () => {
   const [title, setTitle] = useState('');
@@ -29,13 +28,10 @@ const CreatePassword = () => {
     }
 
     try {
-      // Recupera as senhas armazenadas
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
 
-      // Cria um novo objeto de senha com o UUID
       const newPassword = {
-        id: uuidv4(), // Gerar um UUID único para cada senha
         title,
         email,
         password,
@@ -43,10 +39,7 @@ const CreatePassword = () => {
         userId: user.id, // Associar ao usuário logado
       };
 
-      // Adiciona a nova senha à lista
       passwordsList.push(newPassword);
-
-      // Salva a lista atualizada de senhas
       await AsyncStorage.setItem('passwords', JSON.stringify(passwordsList));
 
       Alert.alert('Sucesso', 'Senha salva com sucesso!');
@@ -62,6 +55,10 @@ const CreatePassword = () => {
     } catch (error) {
       Alert.alert('Erro', 'Falha ao salvar a senha.');
     }
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack(); // Voltar para a tela anterior
   };
 
   return (
@@ -100,7 +97,15 @@ const CreatePassword = () => {
         />
       </View>
 
-      <Button title="Salvar Senha" onPress={handleSavePassword} />
+      {/* Botões de voltar e confirmar */}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleGoBack}>
+          <Text style={styles.buttonIcon}>↩</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleSavePassword}>
+          <Text style={styles.buttonIcon}>✔</Text>
+        </TouchableOpacity>
+      </View>
     </ScreenWrapper>
   );
 };

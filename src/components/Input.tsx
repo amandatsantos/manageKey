@@ -1,21 +1,17 @@
 import React from 'react';
-import { TextInput, StyleSheet, Text, View } from 'react-native';
+import { TextInput, StyleSheet, Text, View, TextInputProps } from 'react-native';
 
-interface InputProps {
-  value: string;
-  placeholder: string;
-  onChangeText: (text: string) => void;
-  secureTextEntry?: boolean;
+interface InputProps extends TextInputProps {
   label?: string;
   error?: string | false;
 }
 
-const Input: React.FC<InputProps> = ({ value, placeholder, onChangeText, secureTextEntry, label, error }) => {
+const Input: React.FC<InputProps> = ({ value, placeholder, onChangeText, secureTextEntry, label, error, style }) => {
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        style={[styles.input, error && styles.inputError]}
+        style={[styles.input, error && styles.inputError, style]}  // Combine o estilo customizado
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
@@ -40,10 +36,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: '#292024', // Borda com cor clara
-    borderRadius: 25, // Borda arredondada
+  
     paddingHorizontal: 15,
     fontSize: 16,
-    backgroundColor: '#e8f0ff', // Fundo claro
+    backgroundColor: '#D1E3DD', // Fundo claro
     color: '#292024', // Texto escuro
   },
   inputError: {

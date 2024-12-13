@@ -1,45 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ScreenWrapper from '../../components/scrennWrapper';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamList } from '../../navigation/types';
-import { useAuth } from '../../contexts/AuthContext';
-import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../contexts/AuthContext';  // Para acessar o usuário logado
+import { useFocusEffect } from '@react-navigation/native'; // Hook para atualizar a tela quando voltar
+
 import styles from '../ViewPassword/style';
 
 const ViewPasswords = () => {
-  const { user } = useAuth();
-  const [passwords, setPasswords] = useState<{ id: string; title: string; password: string; description: string; userId: string }[]>([]);
+  const { user } = useAuth();  // Obtém o usuário logado
+  const [passwords, setPasswords] = useState<{ title: string; password: string; description: string; user?: string }[]>([]);
   const [search, setSearch] = useState('');
   const [filteredPasswords, setFilteredPasswords] = useState(passwords);
   const navigation = useNavigation<StackNavigationProp<HomeStackParamList, 'ViewPasswords'>>();
 
   // Função para carregar as senhas
   const loadPasswords = async () => {
-    try {
-      if (!user) {
-        console.warn('Usuário não está logado.');
-        return;
-      }
-
-      const storedPasswords = await AsyncStorage.getItem('passwords');
-      const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
-
-      if (Array.isArray(passwordsList)) {
-        const userPasswords = passwordsList.filter(
-          (password: { userId: string }) => password.userId === user.id
-        );
-        setPasswords(userPasswords);
-        setFilteredPasswords(userPasswords);
-      } else {
-        console.warn('Dados salvos em passwords estão fora do formato esperado.');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar senhas do AsyncStorage:', error);
-    }
+    const storedPasswords = await AsyncStorage.getItem('passwords');
+    const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
+  
+    // Aqui, assumimos que cada password tem pelo menos 'id' e 'email' como opcionais
+    const userPasswords = passwordsList.map((password: any) => ({
+      ...password,
+      email: password.email || '',  // Defina um valor padrão para 'email' se ausente
+      id: password.id || 'default-id',  // Defina um valor padrão para 'id' se ausente
+    }));
+  
+    setPasswords(userPasswords);
+    setFilteredPasswords(userPasswords);
   };
 
   // Usando useFocusEffect para garantir que as senhas sejam recarregadas sempre que a tela for acessada
@@ -60,16 +52,12 @@ const ViewPasswords = () => {
     }
   }, [search, passwords]);
 
-  const handleNavigateToDetails = (item: { id: string; title: string; password: string; description: string; userId: string }) => {
-    if (user) {
-      const passwordDetails = { ...item, email: user.email };
-      navigation.navigate('DetailsPassword', { passwordDetails });
-    } else {
-      console.warn('Usuário não está logado.');
-    }
+  const handleNavigateToDetails = (item: { title: string; password: string; description: string; user?: string }) => {
+    console.log('Navegando para detalhes com:', item);  // Verifique se está saindo o item corretamente
+    navigation.navigate('DetailsPassword', { passwordDetails: item });
   };
 
-  const renderItem = ({ item }: { item: { id: string; title: string; password: string; description: string; userId: string } }) => (
+  const renderItem = ({ item }: { item: { title: string; password: string; description: string; user?: string } }) => (
     <TouchableOpacity style={styles.item} onPress={() => handleNavigateToDetails(item)}>
       <Text style={styles.itemTitle}>{item.title}</Text>
       <Ionicons name="chevron-forward-outline" size={20} color="#000" />
@@ -94,22 +82,13 @@ const ViewPasswords = () => {
       <FlatList
         data={filteredPasswords}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={styles.list}
       />
 
       {/* Botão de Adicionar */}
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => {
-          if (user) {
-            navigation.navigate('CreatePassword');
-          } else {
-            console.warn('Usuário não está logado.');
-          }
-        }}
-      >
-        <Ionicons name="add-outline" size={24} color="#fff" accessible={true} accessibilityLabel="Adicionar nova senha" />
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('CreatePassword')}>
+        <Ionicons name="add-outline" size={24} color="#fff" />
       </TouchableOpacity>
     </ScreenWrapper>
   );

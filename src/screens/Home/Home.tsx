@@ -20,7 +20,7 @@ const Home = ({ navigation }: any) => {
       <View style={styles.container}>
         {/* Títulos */}
         <Text style={styles.title}>Welcome to</Text>
-        <Text style={styles.appName}>manageKey</Text>
+        <Text style={styles.appName}>ManageKey</Text>
         
         {/* Ícone */}
         <Image

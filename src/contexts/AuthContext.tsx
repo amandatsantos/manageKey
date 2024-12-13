@@ -9,7 +9,7 @@ const SECRET_KEY = Config.SECRET_KEY || 'default_secret_key';
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  user: { id: string; email: string, fullname: string } | null;
+  user: { id: string; email: string; fullname?: string } | null;  // 'fullname' agora é opcional
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   updateUser: (email: string, fullname: string, password: string) => Promise<void>; 
@@ -114,6 +114,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
+
   const resetPassword = async (email: string, newPassword: string) => {
     try {
       const userList = await AsyncStorage.getItem('user_list');
@@ -165,6 +166,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Erro ao atualizar usuário:', error);
     }
   };
+
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout, updateUser, register, resetPassword }}>
       {children}
