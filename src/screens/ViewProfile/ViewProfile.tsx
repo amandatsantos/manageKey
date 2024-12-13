@@ -6,7 +6,7 @@ import styles from './style';
 import ScreenWrapper from '../../components/scrennWrapper';
 import { useAuth } from '../../contexts/AuthContext';
 
-const Profile = ({ navigation }) => {
+const Profile = ({  }) => {
   const { logout } = useAuth();
   const [profile, setProfile] = useState<{ email: string; fullname: string; password: string } | null>(null);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -22,7 +22,13 @@ const Profile = ({ navigation }) => {
     const loadProfile = async () => {
       const storedUser = await AsyncStorage.getItem('user');
       if (storedUser) {
-        setProfile(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setProfile({
+          email: parsedUser.email || '',
+          fullname: parsedUser.fullname ||'',
+          password: parsedUser.password || '',
+        });
+        console.log(setProfile)
       }
     };
     loadProfile();
@@ -31,7 +37,7 @@ const Profile = ({ navigation }) => {
   const handleSaveChanges = async () => {
     try {
       // Se o campo de e-mail foi alterado, valide o novo e-mail
-      if (editedProfile.email && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(editedProfile.email)) {
+      if (!editedProfile.email) {
         Alert.alert('Erro', 'O e-mail fornecido é inválido.');
         return;
       }
@@ -76,7 +82,7 @@ const Profile = ({ navigation }) => {
 
               // Redireciona o usuário para a tela de login
               Alert.alert('Sucesso', 'Conta excluída com sucesso!');
-              navigation.reset({ routes: [{ name: 'Login' }] }); // Redireciona para login
+              // navigation.reset({ routes: [{ name: 'Login' }] }); // Redireciona para login
             } catch (error) {
               Alert.alert('Erro', 'Não foi possível excluir a conta.');
             }

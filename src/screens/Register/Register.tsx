@@ -7,7 +7,6 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import globalStyles from '../../styles';
 import { registerSchema } from '../../utils/validations';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import style from '../Register/style';
 
@@ -71,7 +70,6 @@ const Register = ({ navigation }: any) => {
     placeholder="Digite sua senha"
     secureTextEntry={!passwordVisible}
     error={touched.password && errors.password}
-    style={style.input}  // Usando o mesmo estilo de input
   />
   <TouchableOpacity
     onPress={() => setPasswordVisible(!passwordVisible)}
@@ -93,7 +91,6 @@ const Register = ({ navigation }: any) => {
     placeholder="Confirme sua senha"
     secureTextEntry={!confirmPasswordVisible}
     error={touched.confirmPassword && errors.confirmPassword}
-    style={style.input}  // Usando o mesmo estilo de input
   />
   <TouchableOpacity
     onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
