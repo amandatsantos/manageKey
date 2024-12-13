@@ -155,7 +155,7 @@ const DetailsPassword = () => {
         </View>
 
         {/* Modal de Edição */}
-<Modal
+        <Modal
   visible={isEditModalVisible}
   animationType="slide"
   transparent={true}

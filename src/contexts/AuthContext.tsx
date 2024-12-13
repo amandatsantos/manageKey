@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const userList = await AsyncStorage.getItem('user_list');
       const parsedList = userList ? JSON.parse(userList) : [];
       if (parsedList.some((u: { email: string }) => u.email === email)) {
-        console.error('Usuário já existe!');
+        // console.error('Usuário já existe!');
         return false;
       }
 

@@ -92,7 +92,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 16,
-  },
+  }
   
 
   

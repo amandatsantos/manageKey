@@ -189,14 +189,14 @@ const Profile = () => {
 
         {/* Modal de Edição */}
         <Modal
-          visible={editModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setEditModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalHeader}>Editar Perfil</Text>
+  visible={editModalVisible}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setEditModalVisible(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalHeader}>Editar Perfil</Text>
 
       <TextInput
         style={[styles.input, styles.textInput]}
@@ -243,7 +243,7 @@ const Profile = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalHeader}>Excluir Conta</Text>
               <Text style={styles.modalHeader}>Tem certeza de que deseja excluir sua conta?</Text>
-
+  
               <View style={styles.modalButtons}>
                 <TouchableOpacity onPress={handleDeleteAccount} style={styles.button}>
                   <Text style={styles.buttonText}>Excluir</Text>
@@ -257,6 +257,7 @@ const Profile = () => {
         </Modal>
       </View>
     </ScreenWrapper>
+ 
   );
 };
 
