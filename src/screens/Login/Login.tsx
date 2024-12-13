@@ -80,7 +80,7 @@ const Login = ({ navigation }: any) => {
                 <Ionicons
                   name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
                   size={20}
-                  color="#FFA500"  // Cor personalizada
+                  color="#6c6772"  // Cor personalizada
                 />
               </TouchableOpacity>
             </View>
