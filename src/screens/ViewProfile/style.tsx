@@ -64,6 +64,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    marginTop: 16,
   },
   button: {
    backgroundColor: '#D1E3DD',

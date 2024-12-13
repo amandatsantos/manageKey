@@ -214,14 +214,14 @@ const Profile = ({  }) => {
         placeholderTextColor="#32292F"
         secureTextEntry={true}
       />
-
+        <View style={styles.modalButtons}>
       <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
         <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
       </TouchableOpacity>
-
       <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
         <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
       </TouchableOpacity>
+      </View>
     </View>
   </View>
 </Modal>
