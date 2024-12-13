@@ -100,7 +100,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: '#32292F',
     marginBottom: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#D1E3DD',
   },
   textInput: {
     color: '#32292F',
