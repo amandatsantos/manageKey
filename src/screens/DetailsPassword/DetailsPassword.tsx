@@ -117,7 +117,7 @@ const DetailsPassword = () => {
               <Ionicons
                 name={showPassword ? 'eye-off-outline' : 'eye-outline'}
                 size={20}
-                color="#fff"
+                color="#6c6772"
               />
             </TouchableOpacity>
           </View>
@@ -143,52 +143,55 @@ const DetailsPassword = () => {
               setEditModalVisible(true);
             }}
           >
-            <Ionicons name="create-outline" size={24} color="#fff" />
+            <Ionicons name="create-outline" size={24} color="#6c6772" />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.button, styles.deleteButton]}
             onPress={() => setDeleteModalVisible(true)}
           >
-            <Ionicons name="trash-outline" size={24} color="#fff" />
+            <Ionicons name="trash-outline" size={24} color="#6c6772" />
           </TouchableOpacity>
         </View>
 
         {/* Modal de Edição */}
-        <Modal
-          visible={isEditModalVisible}
-          animationType="slide"
-          onRequestClose={() => setEditModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalHeader}>Editar Detalhes</Text>
-            <TextInput
-              style={styles.input}
-              value={editedDetails.title}
-              onChangeText={(text) => setEditedDetails({ ...editedDetails, title: text })}
-              placeholder="Título"
-            />
-            <TextInput
-              style={styles.input}
-              value={editedDetails.email}
-              onChangeText={(text) => setEditedDetails({ ...editedDetails, email: text })}
-              placeholder="Usuário"
-            />
-            <TextInput
-              style={styles.input}
-              value={editedDetails.password}
-              onChangeText={(text) => setEditedDetails({ ...editedDetails, password: text })}
-              placeholder="Senha"
-              secureTextEntry
-            />
-            <TextInput
-              style={[styles.input, { height: 80 }]}
-              value={editedDetails.description}
-              onChangeText={(text) => setEditedDetails({ ...editedDetails, description: text })}
-              placeholder="Descrição"
-              multiline
-            />
+<Modal
+  visible={isEditModalVisible}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setEditModalVisible(false)}
+>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalHeader}>Editar Detalhes</Text>
+          <TextInput
+            style={[styles.input, { marginBottom: 16 }]} // Adicionado espaçamento entre os campos
+            value={editedDetails.title}
+            onChangeText={(text) => setEditedDetails({ ...editedDetails, title: text })}
+            placeholder="Título"
+          />
+          <TextInput
+            style={[styles.input, { marginBottom: 16 }]}
+            value={editedDetails.email}
+            onChangeText={(text) => setEditedDetails({ ...editedDetails, email: text })}
+            placeholder="Usuário"
+          />
+          <TextInput
+            style={[styles.input, { marginBottom: 16 }]}
+            value={editedDetails.password}
+            onChangeText={(text) => setEditedDetails({ ...editedDetails, password: text })}
+            placeholder="Senha"
+            secureTextEntry
+          />
+          <TextInput
+            style={[styles.input, { height: 80, marginBottom: 16 }]} // Altura ajustada e espaçamento
+            value={editedDetails.description}
+            onChangeText={(text) => setEditedDetails({ ...editedDetails, description: text })}
+            placeholder="Descrição"
+            multiline
+          />
 
+          <View style={styles.modalButtons}>
             <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
               <Text style={styles.buttonText}>Salvar Alterações</Text>
             </TouchableOpacity>
@@ -199,27 +202,31 @@ const DetailsPassword = () => {
               <Text style={styles.buttonText}>Cancelar</Text>
             </TouchableOpacity>
           </View>
-        </Modal>
+        </View>
+      </View>
+    </Modal>
 
         {/* Modal de Exclusão */}
         <Modal
           visible={isDeleteModalVisible}
-          animationType="slide"
+          animationType="fade"
+          transparent={true}
           onRequestClose={() => setDeleteModalVisible(false)}
         >
-          <View style={styles.modalContainer}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
             <Text style={styles.modalHeader}>Deletar Senha</Text>
-            <Text style={styles.modalText}>Tem certeza que deseja deletar esta senha?</Text>
-            <TouchableOpacity style={styles.button} onPress={handleDeletePassword}>
-              <Text style={styles.buttonText}>Excluir</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setDeleteModalVisible(false)}
-            >
-              <Text style={styles.buttonText}>Cancelar</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={styles.modalHeader}>Tem certeza que deseja deletar esta senha?</Text>
+            <View style={styles.modalButtons}>
+          < TouchableOpacity style={styles.button} onPress={handleDeletePassword}>
+            <Text style={styles.buttonText}>Excluir</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setDeleteModalVisible(false)} style={styles.button}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </TouchableOpacity>
+        </View>
+        </View>
+        </View>
         </Modal>
       </View>
     </ScreenWrapper>

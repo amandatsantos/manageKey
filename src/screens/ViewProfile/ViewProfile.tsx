@@ -198,40 +198,40 @@ const Profile = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalHeader}>Editar Perfil</Text>
 
-              <TextInput
-                style={[styles.input, styles.textInput]}
-                value={editedProfile.email}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
-                placeholder="E-mail"
-                placeholderTextColor="#32292F"
-              />
-              <TextInput
-                style={[styles.input, styles.textInput]}
-                value={editedProfile.fullname}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
-                placeholder="Nome de Usuário"
-                placeholderTextColor="#32292F"
-              />
-              <TextInput
-                style={[styles.input, styles.textInput]}
-                value={editedProfile.password}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
-                placeholder="Senha"
-                placeholderTextColor="#32292F"
-                secureTextEntry={true}
-              />
-
-              <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
-                <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
-                <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.email}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
+        placeholder="E-mail"
+        placeholderTextColor="#32292F"
+      />
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.fullname}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
+        placeholder="Nome de Usuário"
+        placeholderTextColor="#32292F"
+      />
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.password}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
+        placeholder="Senha"
+        placeholderTextColor="#32292F"
+        secureTextEntry={true}
+      />
+        <View style={styles.modalButtons}>
+      <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
+        <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
+        <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
+      </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+  
         {/* Modal de Exclusão */}
         <Modal
           visible={deleteModalVisible}
