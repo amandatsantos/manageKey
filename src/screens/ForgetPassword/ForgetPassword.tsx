@@ -1,26 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Formik } from 'formik';
-import { useAuth } from '../../contexts/AuthContext'; // Importando o contexto
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../contexts/AuthContext';
 import ScreenWrapper from '../../components/scrennWrapper';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 import CustomModal from '../../components/Modal';
 import globalStyles from '../../styles';
-import { forgetPasswordValidation } from '../../utils/validations'; // Validação separada
+import { forgetPasswordValidation } from '../../utils/validations';
 import style from './style';
 
 const ForgetPassword = ({ navigation }: any) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [newPassword, setNewPassword] = useState('');
-  const { resetPassword } = useAuth(); // Função para resetar a senha
+  const { resetPassword } = useAuth();
 
-  // Função para resetar a senha e exibir a senha gerada
   const handlePasswordReset = async (values: { email: string }) => {
     const tempPassword = generateTemporaryPassword();
-    
-    // Resetar a senha utilizando o método do AuthContext
     const success = await resetPassword(values.email, tempPassword);
     if (success) {
       setNewPassword(tempPassword);
@@ -30,35 +26,25 @@ const ForgetPassword = ({ navigation }: any) => {
     }
   };
 
-  // Função para gerar senha temporária
   const generateTemporaryPassword = () => {
     let password = '';
     const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz';
     const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
-
-    // Garante que a senha tenha pelo menos uma letra maiúscula
     password += upperCaseLetters[Math.floor(Math.random() * upperCaseLetters.length)];
-
-    // Garante que a senha tenha pelo menos 6 caracteres no total
     while (password.length < 6) {
       const allCharacters = lowerCaseLetters + upperCaseLetters + numbers;
       password += allCharacters[Math.floor(Math.random() * allCharacters.length)];
     }
-
-    // Embaralha a senha para garantir que a letra maiúscula não esteja sempre na primeira posição
-    password = password.split('').sort(() => Math.random() - 0.5).join('');
-
-    return password;
+    return password.split('').sort(() => Math.random() - 0.5).join('');
   };
 
   return (
     <ScreenWrapper>
-
-<Image source={require('../../../assets/imagens/iconApp.png')} style={style.logo}/>
+      <Image source={require('../../../assets/imagens/iconApp.png')} style={style.logo} />
       <Formik
         initialValues={{ email: '' }}
-        validationSchema={forgetPasswordValidation} // Validação importada
+        validationSchema={forgetPasswordValidation}
         onSubmit={handlePasswordReset}
       >
         {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -70,13 +56,10 @@ const ForgetPassword = ({ navigation }: any) => {
               placeholder="Digite seu e-mail"
               error={touched.email && errors.email}
             />
-
             <Button title="Recuperar Senha" onPress={handleSubmit} />
-
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={globalStyles.link}>Voltar ao Login</Text>
             </TouchableOpacity>
-
             <CustomModal
               visible={modalVisible}
               title="Nova Senha Gerada"

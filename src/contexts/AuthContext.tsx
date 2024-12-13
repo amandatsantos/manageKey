@@ -3,16 +3,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CryptoJS from 'crypto-js';
 import Config from 'react-native-config';
 import { v4 as uuidv4 } from 'uuid'; // npm install uuid
-import { Alert } from 'react-native';
 
 const SECRET_KEY = Config.SECRET_KEY || 'default_secret_key';
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  user: { id: string; email: string; fullname?: string } | null;  // 'fullname' agora é opcional
+  user: { id: string; email: string; fullname: string, password:string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  updateUser: (email: string, fullname: string, password: string) => Promise<void>; 
+  updateUser: (email: string, fullname: string, password: string) => Promise<void>; // Alterado aqui
   register: (email: string, password: string, fullname: string) => Promise<boolean>;
   resetPassword: (email: string, newPassword: string) => Promise<boolean>;
 };
@@ -21,13 +20,12 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ id: string; email: string, fullname:string, password:string } | null>(null);
+  const [user, setUser] = useState<{  id: string; email: string, fullname:string, password:string } | null>(null);  // 'fullname' opcional aqui também
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const storedUser = await AsyncStorage.getItem('user');
-        console.log(storedUser)
         if (storedUser) {
           const userData = JSON.parse(storedUser);
           setUser(userData);
@@ -57,28 +55,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const userId = uuidv4();
       const userKey = `user_${userId}`;
-  
-      // Recupera a lista de usuários e verifica duplicidade
+
+
       const userList = await AsyncStorage.getItem('user_list');
       const parsedList = userList ? JSON.parse(userList) : [];
       if (parsedList.some((u: { email: string }) => u.email === email)) {
-        Alert.alert('Usuário com esse email já existe!');
+        console.error('Usuário já existe!');
         return false;
       }
-  
-      // Criptografa a senha
+
       const encryptedPassword = CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
-  
-      // Salva os dados do usuário
+
+
       const userData = { id: userId, email, fullname, password: encryptedPassword };
       await AsyncStorage.setItem(userKey, JSON.stringify(userData));
-      await AsyncStorage.setItem('user_list', JSON.stringify([...parsedList, { id: userId, email }]));
-      await AsyncStorage.setItem('user', JSON.stringify({ id: userId, email, fullname, password }));
-  
-      // Atualiza o estado do usuário e autenticação
-      setUser({ id: userId, email, fullname, password });
+      await AsyncStorage.setItem('user_list', JSON.stringify([...parsedList, { id: userId, email, password }]));
+      await AsyncStorage.setItem('user', JSON.stringify({ id: userId, email, fullname, password }));  
+
+
+      setUser({ id: userId, email, fullname , password});
       setIsAuthenticated(true);
-  
       return true;
     } catch (error) {
       console.error('Erro ao registrar usuário:', error);
@@ -101,8 +97,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const decryptedPassword = CryptoJS.AES.decrypt(userData.password, SECRET_KEY).toString(CryptoJS.enc.Utf8);
   
           if (decryptedPassword === password) {
-            await AsyncStorage.setItem('user', JSON.stringify({ id: userData.id, email: userData.email }));
-            setUser({ id: userData.id, email: userData.email, fullname: userData.fullname , password: userData.password});
+            await AsyncStorage.setItem('user', JSON.stringify({ id: userData.id, email: userData.email, fullname: userData.fullname, password: userData.password }));  // Incluindo 'fullname'
+            setUser({ id: userData.id, email: userData.email, fullname: userData.fullname, password: userData.password });
             setIsAuthenticated(true);
             return true;
           }
@@ -141,7 +137,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateUser = async (email: string, fullname: string, password:string) => {
+  const updateUser = async (email: string, fullname: string,  password:string) => {
     try {
       if (user) {
         // Atualizar os dados na AsyncStorage
@@ -151,15 +147,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (storedUser) {
           const userData = JSON.parse(storedUser);
           userData.email = email;
-          userData.fullname = fullname;
-          userData.password = password;
+          userData.fullname = fullname;  // Atualizando 'fullname'
+          userData. password =  password;  // Atualizando 'fullname'
 
-  
           // Salvar os dados atualizados na AsyncStorage
           await AsyncStorage.setItem(userKey, JSON.stringify(userData));
           
           // Atualizar o estado do contexto
-          setUser({ id: user.id, email: user.email, fullname: user.fullname, password: user.password });
+          setUser({ id: user.id, email, fullname, password });  // Atualizando com 'fullname'
         }
       }
     } catch (error) {
