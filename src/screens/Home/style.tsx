@@ -37,7 +37,7 @@ export default StyleSheet.create({
       marginTop: 20,
     },
     loginText: {
-      color: '#FFFFFF',
+      color: '#000000',
       fontSize: 16,
       fontWeight: 'bold',
     },

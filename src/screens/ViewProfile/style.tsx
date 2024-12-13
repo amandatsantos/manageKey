@@ -25,13 +25,6 @@ export default StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
   },
-  input: {
-    backgroundColor: '#D1E3DD',
-    borderRadius: 8,
-    padding: 12,
-    color: '#000000',
-    width: '100%',  // Ajusta a largura do input
-  },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -53,31 +46,16 @@ export default StyleSheet.create({
     padding: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   deleteButton: {
     backgroundColor: '#D1E3DD',
     padding: 10,
     borderRadius: 5,
     marginVertical: 5,
+    
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo transparente
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-    alignItems: 'center',
-  },
-  modalHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
+
   modalText: {
     fontSize: 16,
     marginBottom: 20,
@@ -94,7 +72,45 @@ export default StyleSheet.create({
     marginVertical: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: '#32292f',
     fontSize: 16,
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: '#32292F',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalHeader: {
+    fontSize: 20,
+    marginBottom: 20,
+    color: '#D1E3DD',
+  },
+  input: {
+    width: '100%',
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#32292F',
+    marginBottom: 10,
+    backgroundColor: '#FFFFFF',
+  },
+  textInput: {
+    color: '#32292F',
+  },
+
+  whiteButton: {
+    backgroundColor: '#D1E3DD',
+  },
+  darkText: {
+    color: '#32292F',
+  },
+
 });

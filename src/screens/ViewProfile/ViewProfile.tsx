@@ -90,7 +90,7 @@ const Profile = ({ navigation }) => {
   return (
     <ScreenWrapper>
       <View style={styles.container}>
-        <Text style={styles.header}>Perfil</Text>
+        <Text style={styles.header}></Text>
   
         {/* Ícone de Usuário */}
         <View style={styles.avatar}>
@@ -177,45 +177,48 @@ const Profile = ({ navigation }) => {
   
         {/* Modal de Edição */}
         <Modal
-          visible={editModalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setEditModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalHeader}>Editar Perfil</Text>
-  
-              <TextInput
-                style={styles.input}
-                value={editedProfile.email}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
-                placeholder="E-mail"
-              />
-              <TextInput
-                style={styles.input}
-                value={editedProfile.fullname}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
-                placeholder="Nome de Usuário"
-              />
-              <TextInput
-                style={styles.input}
-                value={editedProfile.password}
-                onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
-                placeholder="Senha"
-                secureTextEntry={true}
-              />
-  
-              <TouchableOpacity onPress={handleSaveChanges} style={styles.button}>
-                <Text style={styles.buttonText}>Salvar Alterações</Text>
-              </TouchableOpacity>
-  
-              <TouchableOpacity onPress={() => setEditModalVisible(false)} style={styles.button}>
-                <Text style={styles.buttonText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+  visible={editModalVisible}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={() => setEditModalVisible(false)}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.modalHeader}>Editar Perfil</Text>
+
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.email}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
+        placeholder="E-mail"
+        placeholderTextColor="#32292F"
+      />
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.fullname}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, fullname: text })}
+        placeholder="Nome de Usuário"
+        placeholderTextColor="#32292F"
+      />
+      <TextInput
+        style={[styles.input, styles.textInput]}
+        value={editedProfile.password}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, password: text })}
+        placeholder="Senha"
+        placeholderTextColor="#32292F"
+        secureTextEntry={true}
+      />
+
+      <TouchableOpacity onPress={handleSaveChanges} style={[styles.button, styles.whiteButton]}>
+        <Text style={[styles.buttonText, styles.darkText]}>Salvar Alterações</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => setEditModalVisible(false)} style={[styles.button, styles.whiteButton]}>
+        <Text style={[styles.buttonText, styles.darkText]}>Cancelar</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
   
         {/* Modal de Exclusão */}
         <Modal
@@ -227,7 +230,7 @@ const Profile = ({ navigation }) => {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalHeader}>Excluir Conta</Text>
-              <Text style={styles.modalText}>Tem certeza de que deseja excluir sua conta?</Text>
+              <Text style={styles.modalHeader}>Tem certeza de que deseja excluir sua conta?</Text>
   
               <View style={styles.modalButtons}>
                 <TouchableOpacity onPress={handleDeleteAccount} style={styles.button}>
