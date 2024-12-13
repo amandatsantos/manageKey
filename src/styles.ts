@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
 export default StyleSheet.create({
 
@@ -49,7 +50,4 @@ export default StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-    
-
-  
 });
