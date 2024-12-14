@@ -44,7 +44,7 @@ Para instalar e executar o manageKey em seu ambiente local, siga os passos abaix
 
 4. Inicie o projeto:
 
-    expo start
+    npm start
 
 5. Abra o aplicativo em um emulador ou dispositivo físico utilizando o aplicativo Expo Go.
 
