@@ -14,7 +14,7 @@ const headerStyles = {
   headerStyle: {
     backgroundColor: '#D1E3DD', // Cor de fundo do cabeçalho
   },
-  headerTitleAlign: 'center', // Centraliza o título
+  headerTitleAlign: 'center' as const, // Centraliza o título, garantindo que o valor seja do tipo correto
   headerTintColor: '#000000', // Cor do texto do cabeçalho
 };
 

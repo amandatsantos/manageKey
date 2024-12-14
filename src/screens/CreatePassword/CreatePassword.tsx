@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native'; // Navegação
 
 const CreatePassword = () => {
   const [title, setTitle] = useState('');
-  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState(''); // Alterado para nickname
   const [password, setPassword] = useState('');
   const [description, setDescription] = useState('');
   const { user } = useAuth(); // Obter o usuário logado
@@ -21,35 +21,43 @@ const CreatePassword = () => {
       Alert.alert('Erro', 'Usuário não autenticado.');
       return;
     }
-
-    if (!title || !password || !email || !description) {
+  
+    if (!title || !password || !nickname || !description) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos.');
       return;
     }
-
+  
     try {
       const storedPasswords = await AsyncStorage.getItem('passwords');
       const passwordsList = storedPasswords ? JSON.parse(storedPasswords) : [];
-
+  
+      // Verifica se a senha já existe para o usuário
+      const existingPassword = passwordsList.some(
+        (p: { userId: string; title: string; nickname: string; }) => p.userId === user.id && (p.title === title || p.nickname === nickname)
+      );
+  
+      if (existingPassword) {
+        Alert.alert('Erro', 'Já existe uma senha com esse título ou nickname.');
+        return;
+      }
+  
       const newPassword = {
         title,
-        email,
+        nickname,
         password,
         description,
-        userId: user.id, // Associar ao usuário logado
+        userId: user.id,
       };
-
+  
       passwordsList.push(newPassword);
       await AsyncStorage.setItem('passwords', JSON.stringify(passwordsList));
-
+  
       Alert.alert('Sucesso', 'Senha salva com sucesso!');
-
-      // Após salvar, navegue de volta para ViewPasswords e atualize a tela
-      navigation.goBack(); // Voltar para a tela anterior (ViewPasswords)
-
+      navigation.goBack();
+  
       // Limpar os campos após salvar
       setTitle('');
-      setEmail('');
+      setNickname('');
       setPassword('');
       setDescription('');
     } catch (error) {
@@ -71,10 +79,10 @@ const CreatePassword = () => {
       />
 
       <Input
-        label="Email/Username"
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email/Username"
+        label="Nickname" // Alterado de Email/Username para Nickname
+        value={nickname} // Usando nickname
+        onChangeText={setNickname} // Alterado para setNickname
+        placeholder="Nickname"
       />
 
       <Input

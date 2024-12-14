@@ -12,7 +12,7 @@ import styles from '../ViewPassword/style';
 
 const ViewPasswords = () => {
   const { user } = useAuth();
-  const [passwords, setPasswords] = useState<{ id: string; title: string; password: string; description: string; userId: string }[]>([]);
+  const [passwords, setPasswords] = useState<{ id: string; title: string; password: string; description: string; userId: string; nickname:string }[]>([]);
   const [search, setSearch] = useState('');
   const [filteredPasswords, setFilteredPasswords] = useState(passwords);
   const navigation = useNavigation<StackNavigationProp<HomeStackParamList, 'ViewPasswords'>>();
@@ -51,16 +51,18 @@ const ViewPasswords = () => {
     }
   }, [search, passwords]);
 
-  const handleNavigateToDetails = (item: { id: string; title: string; password: string; description: string; userId: string }) => {
+  const handleNavigateToDetails = (item: {
+    nickname: any; id: string; title: string; password: string; description: string; userId: string 
+}) => {
     if (user) {
-      const passwordDetails = { ...item, email: user.email };
+      const passwordDetails = { ...item, email: user.email , nickname: item.nickname };
       navigation.navigate('DetailsPassword', { passwordDetails });
     } else {
       console.warn('Usuário não está logado.');
     }
   };
 
-  const renderItem = ({ item }: { item: { id: string; title: string; password: string; description: string; userId: string } }) => (
+  const renderItem = ({ item }: { item: { id: string; title: string; password: string; description: string; userId: string;  nickname: string} }) => (
     <TouchableOpacity style={styles.item} onPress={() => handleNavigateToDetails(item)}>
       <Text style={styles.itemTitle}>{item.title}</Text>
       <Ionicons name="chevron-forward-outline" size={20} color="#000" />
